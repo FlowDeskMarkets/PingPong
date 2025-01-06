@@ -95,8 +95,8 @@ pub fn parse_settings() -> Settings {
 }
 
 pub trait Sender {
-    fn send_data(&mut self, &[u8]) -> std::io::Result<usize>;
-    fn recv_data(&mut self, &mut [u8]) -> std::io::Result<usize>;
+    fn send_data(&mut self, _: &[u8]) -> std::io::Result<usize>;
+    fn recv_data(&mut self, _: &mut [u8]) -> std::io::Result<usize>;
     fn set_busy(&self, busy: bool) -> std::io::Result<()>;
 }
 
