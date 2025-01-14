@@ -87,8 +87,8 @@ pub fn parse_settings() -> Settings {
         msg_count: matches.value_of("messages").unwrap_or("1000").parse::<u64>().unwrap(),
         msg_size: matches.value_of("message_size").unwrap_or("64").parse::<u64>().unwrap(),
         sleep_time: matches.value_of("sleep_time").unwrap_or("0").parse::<u64>().unwrap(),
-        ponger_addr: matches.value_of("remote").unwrap_or("localhost:10000").to_string(),
-        pinger_addr: matches.value_of("local").unwrap_or("localhost:10001").to_string(),
+        ponger_addr: matches.value_of("ponger").unwrap_or("localhost:20001").to_string(),
+        pinger_addr: matches.value_of("pinger").unwrap_or("localhost:20000").to_string(),
         tcp: matches.is_present("tcp"),
         udp: matches.is_present("udp"),
     };
