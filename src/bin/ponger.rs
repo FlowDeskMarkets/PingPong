@@ -8,13 +8,15 @@ fn pong<Socket: pingpong::Sender>(mut sock: Socket, settings: &pingpong::Setting
     let mut buf: [u8; 65000] = [0; 65000];
 
     loop {
-        let bytes_read = pingpong::read_busy_until_some(&mut sock, &mut buf).expect("Reading ping failed");
+        let bytes_read =
+            pingpong::read_busy_until_some(&mut sock, &mut buf).expect("Reading ping failed");
 
         if bytes_read == 0 {
             return;
         }
 
-        sock.send_data(&buf[0..bytes_read]).expect("Sending pong failed");
+        sock.send_data(&buf[0..bytes_read])
+            .expect("Sending pong failed");
     }
 }
 

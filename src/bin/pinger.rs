@@ -8,7 +8,8 @@ fn print_stats(mut times: Vec<u32>) {
     let p99 = times.len() as f64 * 0.99;
     let p999 = times.len() as f64 * 0.999;
 
-    println!("Stats (ns): p50: {} p95: {} p99: {} p999: {} max: {}",
+    println!(
+        "Stats (ns): p50: {} p95: {} p99: {} p999: {} max: {}",
         times[p50 as usize],
         times[p95 as usize],
         times[p99 as usize],
@@ -17,7 +18,11 @@ fn print_stats(mut times: Vec<u32>) {
     );
 }
 
-fn send_single_ping<Socket: pingpong::Sender>(client: &mut Socket, msg: &[u8], recv_buf: &mut [u8]) -> usize {
+fn send_single_ping<Socket: pingpong::Sender>(
+    client: &mut Socket,
+    msg: &[u8],
+    recv_buf: &mut [u8],
+) -> usize {
     client.send_data(&msg).expect("Sending ping failed");
     return pingpong::read_busy_until_some(client, recv_buf).expect("Receiving pong failed");
 }
