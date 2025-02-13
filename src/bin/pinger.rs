@@ -10,9 +10,10 @@ fn print_stats(mut times: Vec<u32>, settings: &pingpong::Settings) {
     let p99 = times.len() as f64 * 0.99;
     let p999 = times.len() as f64 * 0.999;
 
+    let best = *times.first().unwrap() as f64;
     println!(
-        "Stats (ns): p1: {} p50: {} p95: {} p99: {} p999: {} max: {}",
-        times.first().unwrap(),
+        "RTT(ns): p1: {} p50: {} p95: {} p99: {} p999: {} max: {}",
+        best,
         times[p50 as usize],
         times[p95 as usize],
         times[p99 as usize],
@@ -20,7 +21,7 @@ fn print_stats(mut times: Vec<u32>, settings: &pingpong::Settings) {
         times.last().unwrap(),
     );
     let client = Client::new("127.0.0.1:8125", settings.gauge_prefix.as_str()).unwrap();
-    client.gauge(settings.gauge_name.as_str(), p50);
+    client.gauge(settings.gauge_name.as_str(), best);
 }
 
 fn send_single_ping<Socket: pingpong::Sender>(
@@ -66,8 +67,7 @@ fn ping<Socket: pingpong::Sender>(mut client: Socket, settings: &pingpong::Setti
 
         std::thread::sleep(std::time::Duration::from_millis(settings.sleep_time));
     }
-
-    return times;
+    times
 }
 
 fn main() {
