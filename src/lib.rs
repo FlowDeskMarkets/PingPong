@@ -5,6 +5,8 @@ use std::io::Read;
 use std::io::Write;
 
 pub struct Settings {
+    pub gauge_name: String,
+    pub gauge_prefix: String,
     pub non_blocking: bool,
     pub warm_up_count: u64,
     pub msg_count: u64,
@@ -77,6 +79,18 @@ pub fn parse_settings() -> Settings {
                 .help(""),
         )
         .arg(
+            Arg::with_name("gauge_name")
+                .long("--gauge-name")
+                .takes_value(true)
+                .help(""),
+        )
+        .arg(
+            Arg::with_name("gauge_prefix")
+                .long("--gauge-prefix")
+                .takes_value(true)
+                .help(""),
+        )
+        .arg(
             Arg::with_name("sleep_time")
                 .long("--sleep-time")
                 .takes_value(true)
@@ -99,6 +113,14 @@ pub fn parse_settings() -> Settings {
         .get_matches();
 
     return Settings {
+        gauge_name: matches
+            .value_of("gauge_name")
+            .unwrap_or("avelcom")
+            .to_string(),
+        gauge_prefix: matches
+            .value_of("gauge_prefix")
+            .unwrap_or("p50")
+            .to_string(),
         non_blocking: matches.is_present("non_blocking"),
         warm_up_count: matches
             .value_of("warmup_messages")

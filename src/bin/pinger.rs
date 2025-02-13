@@ -1,6 +1,8 @@
 extern crate pingpong;
 
-fn print_stats(mut times: Vec<u32>) {
+use statsd::Client;
+
+fn print_stats(mut times: Vec<u32>, settings: &pingpong::Settings) {
     times.sort();
 
     let p50 = times.len() as f64 * 0.5;
@@ -9,13 +11,16 @@ fn print_stats(mut times: Vec<u32>) {
     let p999 = times.len() as f64 * 0.999;
 
     println!(
-        "Stats (ns): p50: {} p95: {} p99: {} p999: {} max: {}",
+        "Stats (ns): p1: {} p50: {} p95: {} p99: {} p999: {} max: {}",
+        times.first().unwrap(),
         times[p50 as usize],
         times[p95 as usize],
         times[p99 as usize],
         times[p999 as usize],
         times.last().unwrap(),
     );
+    let client = Client::new("127.0.0.1:8125", settings.gauge_prefix.as_str()).unwrap();
+    client.gauge(settings.gauge_name.as_str(), p50);
 }
 
 fn send_single_ping<Socket: pingpong::Sender>(
@@ -71,13 +76,13 @@ fn main() {
     if settings.tcp {
         let client = std::net::TcpStream::connect(format!("{}", settings.ponger_addr)).unwrap();
         let times = ping(client, &settings);
-        print_stats(times);
+        print_stats(times, &settings);
     }
 
     if settings.udp {
         let client = std::net::UdpSocket::bind(format!("{}", settings.pinger_addr)).unwrap();
         client.connect(format!("{}", settings.ponger_addr)).unwrap();
         let times = ping(client, &settings);
-        print_stats(times);
+        print_stats(times, &settings);
     }
 }
