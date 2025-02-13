@@ -2,6 +2,8 @@
 name = "pingpong"
 version = "0.1.0"
 authors = ["Stephan Dollberg <stephan.dollberg@gmail.com>"]
+edition = "2021"
 
 [dependencies]
 clap = "*"
+statsd = "0.16.1"
